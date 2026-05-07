@@ -63,3 +63,24 @@ The voting application only accepts one vote per client browser. It does not reg
 This isn't an example of a properly architected perfectly designed distributed app... it's just a simple
 example of the various types of pieces and languages you might see (queues, persistent data, etc), and how to
 deal with them in Docker at a basic level.
+---
+
+
+
+
+
+
+
+
+## Implementación DevOps (Hito 2)
+Para esta evaluación, he implementado un pipeline de **GitHub Actions** que asegura:
+* **IE1:** Contenerización del microservicio `vote`.
+* **IE2:** Pruebas automáticas de estabilidad.
+* **IE3:** Escaneo de seguridad con Dependabot.
+* **IE4:** Trazabilidad completa desde el código hasta el despliegue.
+* **IE5:** Orquestación de servicios (Python, Redis, .NET, Postgres, Node.js) mediante Docker Compose.
+
+
+
+
+

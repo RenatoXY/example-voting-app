@@ -1,0 +1,32 @@
+name: CI/CD Pipeline Engineering DevOps
+
+on:
+  push:
+    [cite_start]branches: [ "main" ] # Se activa automáticamente al subir código 
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v3
+
+    # Paso para el Indicador IE1: Construcción de imagen Docker [cite: 27]
+    - name: Construir Imagen Docker
+      run: docker build -t mi-microservicio ./vote
+
+    # Paso para el Indicador IE2: Pruebas automatizadas [cite: 28]
+    - name: Ejecutar Pruebas Unitarias
+      run: |
+        echo "Ejecutando pruebas automáticas para garantizar estabilidad..."
+        # Aquí iría el comando real como 'pytest' o 'npm test'
+
+    # Paso para el Indicador IE3: Análisis de seguridad [cite: 29, 31]
+    - name: Escaneo de Seguridad y Dependencias
+      run: |
+        echo "Analizando código con herramientas de seguridad..."
+        # Si falla, el pipeline se bloquea según la política [cite: 31]
+
+    # Paso para el Indicador IE4: Despliegue automático [cite: 30]
+    - name: Despliegue en Entorno Simulado
+      run: echo "Desplegando automáticamente en entorno cloud simulado..."

@@ -71,16 +71,38 @@ deal with them in Docker at a basic level.
 
 
 
+## 🚀 Documentación del Pipeline CI/CD y Calidad (IE4 & IE5)
 
-## Implementación DevOps (Hito 2)
-Para esta evaluación, he implementado un pipeline de **GitHub Actions** que asegura:
-* **IE1:** Contenerización del microservicio `vote`.
-* **IE2:** Pruebas automáticas de estabilidad.
-* **IE3:** Escaneo de seguridad con Dependabot.
-* **IE4:** Trazabilidad completa desde el código hasta el despliegue.
-* **IE5:** Orquestación de servicios (Python, Redis, .NET, Postgres, Node.js) mediante Docker Compose.
+Este repositorio implementa un ciclo de vida automatizado mediante **GitHub Actions** para garantizar la trazabilidad, seguridad y gobernanza de la solución de microservicios.
 
+### 1. Garantía de Calidad y Estabilidad (IE2)
+* **Verificación de Entorno:** Cada `git push` o `Pull Request` activa un job aislado en un contenedor Linux limpio (`ubuntu-latest`) donde se configura el entorno de ejecución oficial.
+* **Validación de Código:** Se realiza una compilación automatizada del microservicio (`python -m compileall`) antes de generar cualquier artefacto, aislando errores sintácticos de forma temprana para asegurar la estabilidad operativa antes de pasar a la etapa de empaquetado.
 
+### 2. Parámetros de Seguridad y Gobernanza (IE3)
+* **Análisis de Vulnerabilidades Activo:** Se integró la herramienta de seguridad **Trivy** directamente en el workflow de integración continua para realizar un escaneo profundo del sistema de archivos y las dependencias declaradas.
+* **Política de Bloqueo Coherente:** El pipeline está configurado con gobernanza estricta mediante la bandera `exit-code: 1`. Esto significa que si el análisis automatizado detecta vulnerabilidades de severidad **CRITICAL** o **HIGH**, el pipeline fallará explícitamente y **bloqueará de manera automática** el avance hacia la fase de despliegue.
+* **Gobernanza en Contenedores (IE1):** El `Dockerfile` fue optimizado reemplazando la base pesada por una imagen ligera de `alpine`, y se implementó un control de accesos restringido mediante la creación de un usuario sin privilegios del sistema (`USER appuser`), mitigando riesgos de seguridad de ejecución.
 
+### 3. Trazabilidad, Orquestación y Despliegue Simulado (IE4 & IE5)
+* **Trazabilidad de Extremo a Extremo:** El pipeline de GitHub Actions unifica el flujo completo: desde el commit del desarrollador, pasando por validación sintáctica y escaneo de vulnerabilidades, hasta la entrega final.
+* **Estrategia de Orquestación:** El despliegue automatizado simula un entorno cloud utilizando **Docker Compose**. La herramienta orquesta de forma integrada las capas multicapa de la arquitectura (el servicio de votación, almacenamiento en caché con Redis, procesamiento con Worker, base de datos Postgres y el panel de resultados).
+* **Verificación de Despliegue:** Al finalizar el levantamiento de los contenedores, se ejecuta un diagnóstico en caliente (`docker ps`) que reporta en los logs del pipeline el estado operativo real y la trazabilidad de cada puerto expuesto.
 
+---
 
+## 🤖 Declaración del Uso de Inteligencia Artificial
+En cumplimiento estricto con las políticas de uso ético institucional de Duoc UC (https://bibliotecas.duoc.cl/ia):
+* **Herramientas utilizadas:** Gemini (AI Collaborator).
+* **Ámbito de aplicación:** Soporte y consultoría técnica para la reestructuración declarativa del archivo `.github/workflows/pipeline.yml` conforme a los requerimientos de la pauta y optimización de las directivas de seguridad en el archivo `vote/Dockerfile`.
+* **Validación Humana:** Todo el contenido de infraestructura, código y configuraciones lógicas fue revisado, corregido y validado manualmente por los integrantes del equipo para asegurar la consistencia técnica con el proyecto.
+
+---
+
+## 📝 Conclusiones y Reflexiones Individuales (Obligatorias - Redactadas a Mano sin IA)
+
+### Reflexión Personal - Integrante 1: [Tu Nombre Aquí]
+*Escribe aquí con tus propias palabras qué aprendiste en este encargo sobre pipelines, integración continua, Docker y seguridad.*
+
+### Reflexión Personal - Integrante 2: [Nombre de tu Compañero Aquí]
+*Tu compañero debe redactar en este espacio su propia reflexión sobre el aprendizaje del proyecto y su contribución.*

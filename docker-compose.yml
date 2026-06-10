@@ -4,9 +4,8 @@
 
 services:
   vote:
-    build: 
+    build:
       context: ./vote
-      target: dev
     depends_on:
       redis:
         condition: service_healthy

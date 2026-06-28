@@ -160,3 +160,7 @@ Nos sirvió harto para ver cómo funciona la automatización en el mundo real y 
 
 ### **Reflexión de Matías Contreras:**
 [Aquí Matías debe escribir su propio párrafo a mano sobre lo que aprendió configurando la seguridad con Trivy y las pruebas automatizadas][cite: 1].
+---
+
+### 🛡️ Políticas de Branch Protection (Bonus IE5)
+Para cumplir con los estándares rigurosos de gobernanza del proyecto, se definió en el repositorio que las ramas `main` y `develop` están protegidas. Esto significa que ningún integrante del equipo puede subir código directamente a producción a menos que pase obligatoriamente por un Pull Request revisado por un compañero y que el pipeline de GitHub Actions (integración continua) termine completamente en verde. Así evitamos fallas humanas en el entorno final.

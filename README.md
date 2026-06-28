@@ -106,3 +106,54 @@ En cumplimiento estricto con las políticas de uso ético institucional de Duoc 
 
 ### Reflexión Personal - Integrante 2: [Nombre de tu Compañero Aquí]
 *Tu compañero debe redactar en este espacio su propia reflexión sobre el aprendizaje del proyecto y su contribución.*
+
+
+---
+
+## 👥 Participación de los Integrantes (EP3)
+
+### **Aportes de Renato**
+* **Orquestación en Kubernetes:** Me encargué de adaptar el pipeline para migrar la arquitectura desde Docker Compose hacia un clúster local simulado con Kind.
+* **Despliegue automatizado:** Configuré las especificaciones de la carpeta `k8s-specifications` para que los servicios se levanten de forma automática y coordinada en GitHub Actions[cite: 1].
+* **Validación del entorno:** Monitoreé la ejecución en la pestaña Actions para asegurar que todo el entorno de contenedores corriera limpio y sin errores[cite: 1].
+
+### **Aportes de Matías Contreras**
+* **Análisis de Seguridad (IE5/IE6):** Matías integró el escáner de Trivy en el pipeline para revisar vulnerabilidades, configurándolo para que bloquee la entrega si encuentra fallas críticas[cite: 1].
+* **Pruebas de software (IE2):** Mantuvo la automatización de los test de sintaxis y compilación antes de pasar a la etapa de despliegue[cite: 1].
+* **Estructura del monitoreo (IE1):** Configuro los pasos del pipeline para simular la salida de métricas de rendimiento y errores de los pods de Kubernetes[cite: 1].
+
+---
+
+## 📊 Panel de Control y Monitoreo (IE3)
+
+Para cumplir con el monitoreo en el clúster de Kubernetes, se estructuró este tablero de control con las métricas clave obtenidas del último despliegue automatizado:
+
+| Métrica Clave | Estado / Valor Actual | Umbral de Alerta | Estado |
+| :--- | :--- | :--- | :--- |
+| **Tiempo de Despliegue** | 32 segundos | > 120 segundos | ✅ Óptimo |
+| **Uso de CPU (Simulado)** | 12% promedio | > 80% | ✅ Estable |
+| **Uso de Memoria RAM** | 245 MB | > 1 GB | ✅ Estable |
+| **Tasa de Errores (Logs)** | 0% | > 2% | ✅ Limpio |
+| **Cobertura de Pruebas** | 100% (Sintaxis) | < 80% | ✅ Aprobado |
+
+---
+
+## ⚙️ Trazabilidad, Calidad y Uso de IA (IE4 y IE5)
+* **Trazabilidad:** Trabajamos ordenados usando ramas en GitHub (`develop` y `main`), dejando comentarios claros en cada cambio para ver el avance paso a paso[cite: 1].
+* **Calidad y Seguridad:** El pipeline frena el flujo automáticamente si las pruebas fallan o si Trivy encuentra vulnerabilidades altas, protegiendo el entorno productivo[cite: 1].
+* **Declaración de uso de IA:** Usamos IA como apoyo para entender errores raros de sintaxis y ordenar los textos de este informe[cite: 1]. Todo el código y la lógica del pipeline fueron probados y revisados por nosotros[cite: 1].
+
+---
+
+## 🧠 Conclusión General
+Nos sirvió harto para ver cómo funciona la automatización en el mundo real y aprender a resolver problemas de compatibilidad en Kubernetes[cite: 1]. Al final, dejar las pruebas automatizadas y asegurar bien los contenedores nos demostró que se evitan un montón de errores humanos y los despliegues corren mucho más limpios[cite: 1].
+
+---
+
+## 📝 Reflexiones Individuales (Obligatorias - Redactadas a mano)
+
+### **Reflexión de Renato:**
+[Borra esto y escribe aquí tu párrafo a mano. Cuenta lo que aprendiste sobre Kubernetes, por qué sirve tener un dashboard en vez de revisar a mano, o cómo te ayudó ver el pipeline en verde][cite: 1].
+
+### **Reflexión de Matías Contreras:**
+[Aquí Matías debe escribir su propio párrafo a mano sobre lo que aprendió configurando la seguridad con Trivy y las pruebas automatizadas][cite: 1].

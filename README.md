@@ -1,3 +1,6 @@
+![CI-CD Status](https://img.shields.io/github/actions/workflow/status/RenatoXY/example-voting-app/pipeline.yml?branch=main&label=Pipeline%20EP3&style=for-the-badge)
+![Security Status](https://img.shields.io/badge/Trivy__Scan-Protegido-brightgreen?style=for-the-badge&logo=aquasecurity)
+
 # Example Voting App
 
 A simple distributed application running across multiple Docker containers.

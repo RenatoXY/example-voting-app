@@ -55,7 +55,7 @@ jobs:
   # ETAPA 2: CONSTRUCCIÓN Y PUBLICACIÓN AUTOMATIZADA (IE2, IE6, IE7, IE9)
   # ==========================================
   build-and-push:
-    name: Container Build & Push to Docker Hub
+    name: Container Build & Push to GHCR
     needs: quality-and-security # IE9: Si la etapa anterior falla, esta no se ejecuta
     runs-on: ubuntu-latest
     steps:
@@ -65,24 +65,31 @@ jobs:
       - name: Configurar Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # IE7: Autenticación automatizada en Docker Hub
-      - name: Autenticacion en Docker Hub
+      # IE7: Autenticación automatizada en GitHub Container Registry (Sin secretos manuales)
+      - name: Autenticacion en GHCR
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-        continue-on-error: true # Permite avanzar la simulacion si no hay secretos creados
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Ajuste técnico: Convierte el nombre del repositorio a minúsculas para cumplir la norma de Docker
+      - name: Configurar Nombre de Imagen en Minúsculas
+        run: |
+          echo "IMAGE_TAG=ghcr.io/${{ github.repository }}/mi-vote-app:latest" | tr '[:upper:]' '[:lower:]' >> $GITHUB_ENV
 
       # IE2 e IE6: Construcción de la imagen Docker optimizada
       - name: Construir Imagen Docker
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/mi-vote-app:latest ./vote
+          docker build -t ${{ env.IMAGE_TAG }} ./vote
 
-      # IE7 y IE9: Publicación en Docker Hub tras pruebas exitosas
-      - name: Publicar Imagen en Docker Hub
+      # IE7 y IE9: Publicación real en GHCR tras pruebas exitosas
+      - name: Publicar Imagen en GHCR
         run: |
-          echo "Subiendo imagen optimizada a Docker Hub corporativo..."
-          echo "Image successfully pushed: latest"
+          docker push ${{ env.IMAGE_TAG }}
+          echo "=== Publicación Exitosa ==="
+          echo "Subiendo imagen optimizada al registro GHCR de GitHub..."
+          echo "Image successfully pushed to GHCR: latest"
 
   # ==========================================
   # ETAPA 3: ORQUESTRACIÓN, DESPLIEGUE SEGURO Y TELEMETRÍA (IE10, IE12, IE13)

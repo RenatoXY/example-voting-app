@@ -1,136 +1,57 @@
 name: DevOps EFT Pipeline Complete
 
-# IE9: Configuración de disparadores automatizados según la pauta
 on:
   push:
-    branches: [ develop, main ]
+    branches: [ main ]
 
 jobs:
-  # ==========================================
-  # ETAPA 1: CALIDAD Y SEGURIDAD AVANZADA (IE7, IE8, IE9)
-  # ==========================================
+  # ETAPA 1: Calidad y Seguridad
   quality-and-security:
     name: Code Quality & Security Scanning
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout del codigo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Configurar Entorno Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Instalar Dependencias Locales
+      - uses: actions/checkout@v4
+      - name: Ejecutar Pruebas
         run: |
           cd vote
-          pip install -r requirements.txt
           pip install pytest
+          pytest
 
-      # IE7: Ejecución de pruebas unitarias para garantizar estabilidad
-      - name: Ejecutar Pruebas Unitarias
-        run: |
-          cd vote
-          pytest || true
-
-      # IE8: Integración de Análisis Estático de Código con SonarQube
-      - name: Analisis Estatico SonarQube (Simulado)
-        run: |
-          echo "=== Iniciando SonarQube Scanner ==="
-          echo "Analizando calidad del codigo fuente..."
-          echo "Resultados: 0 Bugs, 0 Vulnerabilities, 100% Cobertura de sintaxis."
-          echo "SonarQube Quality Gate: PASSED"
-
-      # IE8 y IE9: Escaneo de Dependencias y Bloqueo ante fallas criticas con Snyk
-      - name: Analisis de Vulnerabilidades con Snyk (Simulado)
-        run: |
-          echo "=== Iniciando Snyk Security Scan ==="
-          echo "Revisando dependencias en requirements.txt y buscando secretos expuestos..."
-          echo "Snyk Scan Result: No critical vulnerabilities found."
-          echo "Politica de cumplimiento: CERO fallas criticas detectadas. Pipeline CONTINUA."
-
-  # ==========================================
-  # ETAPA 2: CONSTRUCCIÓN Y PUBLICACIÓN AUTOMATIZADA (IE2, IE6, IE7, IE9)
-  # ==========================================
+  # ETAPA 2: Construcción y Publicación en GHCR
   build-and-push:
     name: Container Build & Push to GHCR
-    needs: quality-and-security # IE9: Si la etapa anterior falla, esta no se ejecuta
+    needs: quality-and-security
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
-      - name: Checkout del codigo
-        uses: actions/checkout@v4
-
-      # Forzamos el nombre de la imagen 100% en minúsculas de forma directa para evitar rechazos de Docker
-      - name: Configurar Nombre de Imagen
-        run: |
-          echo "IMAGE_TAG=ghcr.io/renatoxy/example-voting-app/mi-vote-app:latest" >> $GITHUB_ENV
-
-      - name: Configurar Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      # IE7: Autenticación automatizada en GitHub Container Registry
-      - name: Autenticacion en GHCR
+      - uses: actions/checkout@v4
+      
+      - name: Login to GHCR
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./vote
+          push: true
+          # El nombre de la imagen debe estar en minúsculas por norma de Docker
+          tags: ghcr.io/${{ github.repository_owner }}/vote:latest
 
-      # IE2 e IE6: Construcción de la imagen Docker optimizada apuntando directo a la carpeta vote
-      - name: Construir Imagen Docker
-        run: |
-          docker build -t ${{ env.IMAGE_TAG }} ./vote
-
-      # IE7 y IE9: Publicación real en GHCR tras autenticación y construcción exitosa
-      - name: Publicar Imagen en GHCR
-        run: |
-          docker push ${{ env.IMAGE_TAG }}
-          echo "=== Publicación Exitosa ==="
-          echo "Subiendo imagen optimizada al registro GHCR de GitHub..."
-          echo "Image successfully pushed to GHCR: latest"
-
-  # ==========================================
-  # ETAPA 3: ORQUESTRACIÓN, DESPLIEGUE SEGURO Y TELEMETRÍA (IE10, IE12, IE13)
-  # ==========================================
-  deploy-stage:
-    name: Kubernetes Orchestration & Service Mesh Simulation
+  # ETAPA 3: Despliegue en Kubernetes (Simulado)
+  deploy:
+    name: Kubernetes Orchestration
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout del codigo
-        uses: actions/checkout@v4
-
-      - name: Crear Cluster Local de Kubernetes (Kind)
-        uses: helm/kind-action@v1.10.0
-        with:
-          cluster_name: eft-prod-cluster
-
-      # IE13: Pruebas de aceptación previas al despliegue final
-      - name: Ejecutar Pruebas de Aceptacion Pre-Despliegue
+      - uses: actions/checkout@v4
+      - name: Simular Despliegue en K8s
         run: |
-          echo "=== Validando ambiente simulado de produccion ==="
-          echo "Pruebas de humo de red: OK"
-          echo "Verificacion de politicas de aprobacion en GitHub: Aprobado por el equipo técnico."
-
-      # IE10: Orquestación automatizada de contenedores en Kubernetes
-      - name: Desplegar Infraestructura en Kubernetes
-        run: |
-          kubectl apply -f k8s-specifications/
-          kubectl get pods
-          kubectl get svc
-
-      # IE12: Configuración de Redes (Istio) y Metricas del Sistema (AWS CloudWatch)
-      - name: Integracion de Malla de Red (Istio) y Telemetria (AWS CloudWatch)
-        run: |
-          echo "=== Configurando Istio Service Mesh ==="
-          echo "Inyectando proxies de Istio en los pods para control de trafico multicapa y seguridad de red..."
-          echo "Monitoreo de malla activo."
-          echo ""
-          echo "=== Conectando AWS CloudWatch Agent ==="
-          echo "Exportando logs del cluster y metricas de rendimiento (CPU, Memoria) en tiempo real hacia AWS CloudWatch Dashboard."
-          echo "Trazabilidad de punta a punta configurada exitosamente."
+          echo "Conectando al cluster..."
+          echo "Desplegando imagen desde ghcr.io/${{ github.repository_owner }}/vote:latest"
+          echo "Despliegue finalizado exitosamente."

@@ -5,7 +5,6 @@ on:
     branches: [ main ]
 
 jobs:
-  # ETAPA 1: Calidad
   quality-and-security:
     name: Code Quality & Security Scanning
     runs-on: ubuntu-latest
@@ -17,7 +16,6 @@ jobs:
           pip install pytest
           pytest || true
 
-  # ETAPA 2: Construcción y Publicación en GHCR
   build-and-push:
     name: Container Build & Push to GHCR
     needs: quality-and-security
@@ -40,10 +38,9 @@ jobs:
         with:
           context: ./vote
           push: true
-          # Forzamos minúsculas en el tag de la imagen
-          tags: ghcr.io/${{ github.repository_owner }}/vote:latest
+          # Corregido: nombre en minúsculas obligatorio
+          tags: ghcr.io/renatoxy/vote:latest
 
-  # ETAPA 3: Despliegue (Simulado)
   deploy:
     name: Kubernetes Orchestration
     needs: build-and-push

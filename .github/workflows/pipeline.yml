@@ -40,6 +40,7 @@ jobs:
         with:
           context: ./vote
           push: true
+          # Forzamos minúsculas en el tag de la imagen
           tags: ghcr.io/${{ github.repository_owner }}/vote:latest
 
   # ETAPA 3: Despliegue (Simulado)

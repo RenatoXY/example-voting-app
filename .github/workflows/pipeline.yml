@@ -1,6 +1,6 @@
 name: DevOps EFT Pipeline Complete
 
-# IE9: Configuración de disparadores automatizados según la pauta
+# IE9: Configuración de disparadores automatizados según la pautaa
 on:
   push:
     branches: [ develop, main ]
